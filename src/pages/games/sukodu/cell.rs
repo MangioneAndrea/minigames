@@ -21,7 +21,7 @@ impl Component for Cell {
 
     fn view(&self, _: &Context<Self>) -> Html {
         html! {
-            <div class="cell border">
+            <div class="cell border w-8 h-8 text-center">
                 {self.props.number}
             </div>
         }

@@ -6,17 +6,17 @@ use crate::pages::games::sukodu::cell::Cell;
 fn sukodu3x3() -> Html {
     html! {
         <div class={"border-2"}>
-            <div class={"grid grid-cols-3"}>
+            <div class={"grid grid-cols-3 w-fit"}>
                 <Cell number={1} />
                 <Cell number={2}/>
                 <Cell number={3} />
             </div>
-            <div class={"grid grid-cols-3"}>
+            <div class={"grid grid-cols-3 w-fit"}>
                 <Cell number={4} />
                 <Cell number={5} />
                 <Cell number={6} />
             </div>
-            <div class={"grid grid-cols-3"}>
+            <div class={"grid grid-cols-3 w-fit"}>
                 <Cell number={7} />
                 <Cell number={8} />
                 <Cell number={9} />
@@ -28,18 +28,18 @@ fn sukodu3x3() -> Html {
 #[function_component(Sukodu9x9)]
 fn sukodu9x9() -> Html {
     html! {
-        <div class={"border-4"}>
-            <div class={"grid grid-cols-3"}>
+        <div class={"border-4 w-fit"}>
+            <div class={"grid grid-cols-3 w-fit"}>
                 <Sukodu3x3/>
                 <Sukodu3x3/>
                 <Sukodu3x3/>
             </div>
-            <div class={"grid grid-cols-3"}>
+            <div class={"grid grid-cols-3 w-fit"}>
                 <Sukodu3x3/>
                 <Sukodu3x3/>
                 <Sukodu3x3/>
             </div>
-            <div class={"grid grid-cols-3"}>
+            <div class={"grid grid-cols-3 w-fit"}>
                 <Sukodu3x3/>
                 <Sukodu3x3/>
                 <Sukodu3x3/>
