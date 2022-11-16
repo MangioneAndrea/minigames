@@ -5,7 +5,7 @@ use crate::pages::games::sukodu::cell::Cell;
 #[function_component(Sukodu3x3)]
 fn sukodu3x3() -> Html {
     html! {
-        <div class={"border-4"}>
+        <div class={"border-2"}>
             <div class={"grid grid-cols-3"}>
                 <Cell number={1} />
                 <Cell number={2}/>
@@ -28,7 +28,7 @@ fn sukodu3x3() -> Html {
 #[function_component(Sukodu9x9)]
 fn sukodu9x9() -> Html {
     html! {
-        <div>
+        <div class={"border-4"}>
             <div class={"grid grid-cols-3"}>
                 <Sukodu3x3/>
                 <Sukodu3x3/>
