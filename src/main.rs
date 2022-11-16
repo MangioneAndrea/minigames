@@ -1,20 +1,31 @@
+mod layout;
+mod pages;
+
+use crate::layout::navbar::NavBar;
+use crate::pages::home::Home;
 use yew::prelude::*;
+use yew_router::prelude::*;
+
+#[derive(Clone, Routable, PartialEq)]
+enum Route {
+    #[at("/")]
+    HomePage,
+}
+
+fn switch(routes: Route) -> Html {
+    match routes {
+        Route::HomePage => html! { <Home /> },
+    }
+}
 
 #[function_component]
 fn App() -> Html {
-    let counter = use_state(|| 0);
-    let onclick = {
-        let counter = counter.clone();
-        move |_| {
-            let value = *counter + 1;
-            counter.set(value);
-        }
-    };
-
     html! {
         <div>
-            <button {onclick}>{ "+1" }</button>
-            <p>{ *counter }</p>
+            <NavBar />
+            <BrowserRouter>
+                <Switch<Route> pathname="/" render={switch} />
+            </BrowserRouter>
         </div>
     }
 }
