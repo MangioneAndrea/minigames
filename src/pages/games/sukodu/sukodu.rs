@@ -7,7 +7,7 @@ fn sukodu3x3() -> Html {
     html! {
         <div class={"border-2"}>
             <div class={"grid grid-cols-3 w-fit"}>
-                <Cell number={1} />
+                <Cell number={1} can_edit={true} />
                 <Cell number={2}/>
                 <Cell number={3} />
             </div>
