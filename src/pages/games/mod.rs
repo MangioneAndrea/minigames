@@ -1,1 +1,1 @@
-pub(crate) mod snakent;
+pub(crate) mod games;
