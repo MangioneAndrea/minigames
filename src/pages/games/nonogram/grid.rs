@@ -1,10 +1,8 @@
 use yew::prelude::*;
 
-
 pub enum Message {
     Clicked(usize, usize),
 }
-
 
 #[derive(Clone, PartialEq)]
 pub struct Grid {
@@ -41,7 +39,15 @@ impl Component for Grid {
 
     fn update(&mut self, _: &Context<Self>, msg: Self::Message) -> bool {
         log::info!("hey");
-        true
+        match msg {
+            Message::Clicked(row, col) => {
+                self.toggle(row, col);
+                true
+            },
+            _ => {
+                false
+            }
+        }
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
@@ -50,7 +56,7 @@ impl Component for Grid {
                 { (0 .. (self).cols).map(|col|{
                     (0 .. self.rows).map(|row|{
                         html! {
-                            <div class={"border margin w-6 h-6 bg-black"} onclick={ctx.link().callback(move |_| Message::Clicked(col,row))}/>
+                            <div class={format!("border margin w-6 h-6 bg-{}", if self.grid[col][row] {"black"}else{"white"})} onclick={ctx.link().callback(move |_| Message::Clicked(col,row))}/>
                         }
                     }).collect::<Html>()
                 }).collect::<Html>() }
