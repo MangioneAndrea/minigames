@@ -1,3 +1,3 @@
-pub(crate) mod games;
-mod snakent;
-mod sukodu;
+pub(crate) mod snakent;
+pub(crate) mod sukodu;
+pub(crate) mod nonogram;

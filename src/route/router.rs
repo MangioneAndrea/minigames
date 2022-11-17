@@ -1,15 +1,18 @@
 use yew::prelude::*;
 use yew_router::prelude::*;
 use crate::pages::home::Home;
-use crate::pages::games::games::Games;
+use crate::pages::games::sukodu::sukodu::Sukodu;
+use crate::pages::games::nonogram::nonogram::Nonogram;
 
 
 #[derive(Clone, Routable, PartialEq)]
 pub enum Route {
     #[at("/")]
     HomePage,
-    #[at("/games")]
-    GamesPage,
+    #[at("/sudoku")]
+    SukoduPage,
+    #[at("/nonogram")]
+    NonogramPage,
     #[not_found]
     #[at("/404")]
     NotFound,
@@ -18,7 +21,8 @@ pub enum Route {
 pub fn switch(routes: Route) -> Html {
     match routes {
         Route::HomePage => html! { <Home /> },
-        Route::GamesPage => html! { <Games/> },
+        Route::SukoduPage => html! { <Sukodu/> },
+        Route::NonogramPage => html! { <Nonogram/> },
         Route::NotFound => html! { <h1>{"404"}</h1> },
     }
 }

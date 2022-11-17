@@ -2,7 +2,7 @@ use yew::prelude::*;
 
 pub struct Cell {
     props: Props,
-    class: &str,
+   // class: &str,
 }
 
 #[derive(Properties, Clone, PartialEq)]
@@ -23,13 +23,13 @@ impl Component for Cell {
 
         Self {
             props: ctx.props().clone(),
-            class: class.as_str(),
+            //class: class.as_str(),
         }
     }
 
     fn view(&self, _: &Context<Self>) -> Html {
         html! {
-            <div class={self.class}>
+            <div /*class={self.class}*/>
                 {self.props.number}
             </div>
         }
