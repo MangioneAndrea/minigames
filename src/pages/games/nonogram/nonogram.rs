@@ -11,7 +11,7 @@ pub fn nonogram() -> Html {
                 vec![],
                 vec![3],
                 vec![],
-                vec![1],
+                vec![1, 1],
             ]} cols_rules={vec![
                 vec![],
                 vec![],

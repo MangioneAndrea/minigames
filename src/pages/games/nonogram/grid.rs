@@ -1,10 +1,6 @@
 use std::cmp;
 
-use yew::prelude::*;
-
-pub enum Message {
-    Clicked(usize, usize),
-}
+use yew::{prelude::*, virtual_dom::VNode};
 
 #[derive(Clone, PartialEq)]
 pub struct Grid {
@@ -60,33 +56,44 @@ pub fn grid(props: &GridProps) -> Html {
         max
     };
 
-    log::info!("max_rows: {}", max_rows);
-    log::info!("max_cols: {}", max_cols);
+    let total_width = max_rows + props.cols;
 
+    let void_cell = || html! {<div class="w-6 h-6 text-center bg-gray-200"/>};
+    let empty_cell = || html! {<div class="w-6 h-6 text-center"/>};
+    let num_cell = |num: usize| html! {<div class="w-6 h-6 margintext-center">{num}</div>};
+    
     html! {
         <div class={format!("border-4 grid grid-cols-{} w-fit", props.cols+max_rows)}>
             {
-                (0..(max_rows+props.cols)*max_cols)
-                    .map(|pos| html!{<div class="w-6 h-6 bg-green">{
-                        if pos%(max_rows+props.cols)*max_cols <max_rows{
+                (0..total_width*max_cols)
+                    .map(|pos| {
+                        let column_index = pos % total_width;
+
+                        if column_index < max_rows{
                             // empty angle
-                            format!("")
+                            void_cell()
                         }else{
-                            let col_elem= pos/((max_rows+props.cols));
-                            let col_index=pos%((max_rows+props.cols))-1;
+                            let col_elem= pos/total_width;
+                            let col_index=column_index-max_rows;
 
                             if props.cols_rules[col_index].len() > col_elem{
-                                format!("{}", props.cols_rules[col_index][col_elem])
+                                num_cell(props.cols_rules[col_index][col_elem])
                             }else{
-                                format!("")
+                                empty_cell()
                             }
-                        } }</div>})
-                    .collect::<Html>()
+                        }
+                    }).collect::<Html>()
             }
             { (0 .. (props).rows).map(|row|{
 
                 (0..(max_rows))
-                    .map(|_| html!{<div class="w-6 h-6 bg-green">{"0"}</div>})
+                    .map(|mr| {
+                        if props.rows_rules[row].len() > mr {
+                            num_cell(props.rows_rules[row][mr])
+                        }else{
+                            empty_cell() 
+                        }
+                    })
                     .chain(
                         (0 .. props.cols).map(|col|{
                             html! {
