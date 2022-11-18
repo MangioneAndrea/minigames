@@ -1,6 +1,6 @@
 use std::cmp;
 
-use yew::{prelude::*, virtual_dom::VNode};
+use yew::{prelude::*};
 
 #[derive(Clone, PartialEq)]
 pub struct Grid {
@@ -76,11 +76,16 @@ pub fn grid(props: &GridProps) -> Html {
                             let col_elem= pos/total_width;
                             let col_index=column_index-max_rows;
 
-                            if props.cols_rules[col_index].len() > col_elem{
-                                num_cell(props.cols_rules[col_index][col_elem])
-                            }else{
+                            let empty_cells = max_cols - props.cols_rules[col_index].len();
+
+                            if col_elem < empty_cells{
                                 empty_cell()
+                            }else{
+                                let row_index = col_elem - empty_cells;
+                                let num = props.cols_rules[col_index][row_index];
+                                num_cell(num)
                             }
+
                         }
                     }).collect::<Html>()
             }
@@ -88,10 +93,13 @@ pub fn grid(props: &GridProps) -> Html {
 
                 (0..(max_rows))
                     .map(|mr| {
-                        if props.rows_rules[row].len() > mr {
-                            num_cell(props.rows_rules[row][mr])
+                        let empty_cells = max_rows - props.rows_rules[row].len();
+                        if mr < empty_cells{
+                            empty_cell()
                         }else{
-                            empty_cell() 
+                            let row_index = mr - empty_cells;
+                            let num = props.rows_rules[row][row_index];
+                            num_cell(num)
                         }
                     })
                     .chain(
