@@ -40,6 +40,7 @@ pub fn grid(props: &GridProps) -> Html {
         })
     };
 
+
     let max_rows = {
         let mut max = 0;
         for row in &props.rows_rules {
@@ -58,12 +59,11 @@ pub fn grid(props: &GridProps) -> Html {
 
     let total_width = max_rows + props.cols;
 
-    let void_cell = || html! {<div class="w-6 h-6 text-center bg-gray-200"/>};
     let empty_cell = || html! {<div class="w-6 h-6 text-center"/>};
-    let num_cell = |num: usize| html! {<div class="w-6 h-6 margintext-center">{num}</div>};
+    let num_cell = |num: usize| html! {<div class="w-6 h-6 text-center">{num}</div>};
     
     html! {
-        <div class={format!("border-4 grid grid-cols-{} w-fit", props.cols+max_rows)}>
+        <div class={format!("grid w-fit")} style={format!("grid-template-columns:repeat({}, minmax(0,1fr));", props.cols+max_rows)}>
             {
                 (0..total_width*max_cols)
                     .map(|pos| {
@@ -71,7 +71,7 @@ pub fn grid(props: &GridProps) -> Html {
 
                         if column_index < max_rows{
                             // empty angle
-                            void_cell()
+                            empty_cell()
                         }else{
                             let col_elem= pos/total_width;
                             let col_index=column_index-max_rows;
