@@ -53,7 +53,10 @@ pub fn sukodu() -> Html {
     html! {
         <div>
             <h1>{"Sukodu"}</h1>
-            <p>{"Sudoku is a game where you have to fill in a grid with numbers. This game just tries to confuse you by swapping the grid randomly (but still keeping the meaning!)"}</p>
+            <p>{"Sudoku is a game where you have to fill in a grid with numbers. You are not allowed to reuse the same number within the same 3x3 square, nor within the same 9x1 or 1x9 line"}</p>
+            <br/>
+            <p>{"Of course I'm an evil person, so the Sukodu randomly block one of the directons when eating a square. Anyway I thought this was not enough, so instead of the arrows, you need to use VIM directions (h j k l)"}</p>
+            <br/>
             <Sukodu9x9/>
             </div>
     }

@@ -54,9 +54,11 @@ pub fn nonogram() -> Html {
 
     html! {
         <div>
-            <h1>{"NonnoGrampa"}</h1>
+            <h1>{"NonnoGrampa "}<a href={"https://en.wikipedia.org/wiki/Nonogram"}>{"(wiki)"}</a></h1>
             <p>{"Nonogram is a game where you have to fill in a grid with black or whites. Rows and columns tell you what how many blocks should be conseguetially painted black"}</p>
+            <br/>
             <p>{"Of course I'm an evil person, so the NonnoGrampa randomly rotates the grid to confuse you"}</p>
+            <br/>
             <Grid
                 cols={nonogram_example.cols}
                 rows={nonogram_example.rows}
