@@ -36,7 +36,7 @@ pub fn nav_bar() -> Html {
                 <span onclick={redirect(navigator.clone(), Route::SukoduPage)} class={getclass(Route::SukoduPage)}>{"Sukodu"}</span>
               </li>
               <li>
-                <span onclick={redirect(navigator.clone(), Route::NonogramPage)} class={getclass(Route::NonogramPage)}>{"Nonogram"}</span>
+                <span onclick={redirect(navigator.clone(), Route::NonogramPage)} class={getclass(Route::NonogramPage)}>{"NonnoGrampa"}</span>
               </li>
             </ul>
           </div>

@@ -1,3 +1,3 @@
 pub(crate) mod snakent;
 pub(crate) mod sukodu;
-pub(crate) mod nonogram;
+pub(crate) mod nonnogrampa;

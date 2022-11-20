@@ -98,7 +98,6 @@ pub fn grid(props: &GridProps) -> Html {
 
     html! {
         <>
-        <button onclick={solve}>{"Solve"}</button>
         <div class={format!("grid w-fit")} style={format!("grid-template-columns:repeat({}, minmax(0,1fr));", props.cols+max_rows)}>
             {
                 (0..total_width*max_cols)
@@ -149,6 +148,7 @@ pub fn grid(props: &GridProps) -> Html {
                 })).collect::<Html>()
             }).collect::<Html>() }
         </div>
+        <button onclick={solve}>{"Solve"}</button>
         </>
     }
 }

@@ -11,7 +11,7 @@ struct NonogramType {
     rows_rules: Vec<Rule>,
 }
 
-#[function_component(Nonogram)]
+#[function_component(NonnoGrampa)]
 pub fn nonogram() -> Html {
     let nonogram_example: NonogramType = NonogramType {
         cols: 15,
@@ -54,9 +54,9 @@ pub fn nonogram() -> Html {
 
     html! {
         <div>
-            <h1>{"Nonogram"}</h1>
+            <h1>{"NonnoGrampa"}</h1>
             <p>{"Nonogram is a game where you have to fill in a grid with black or whites. Rows and columns tell you what how many blocks should be conseguetially painted black"}</p>
-            <p>{"Of course I'm an evil person, so the grid randomly rotates"}</p>
+            <p>{"Of course I'm an evil person, so the NonnoGrampa randomly rotates the grid to confuse you"}</p>
             <Grid
                 cols={nonogram_example.cols}
                 rows={nonogram_example.rows}

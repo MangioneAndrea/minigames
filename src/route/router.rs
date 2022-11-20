@@ -2,7 +2,7 @@ use yew::prelude::*;
 use yew_router::prelude::*;
 use crate::pages::home::Home;
 use crate::pages::games::sukodu::sukodu::Sukodu;
-use crate::pages::games::nonogram::nonogram::Nonogram;
+use crate::pages::games::nonnogrampa::nonogram::NonnoGrampa;
 
 
 #[derive(Clone, Routable, PartialEq)]
@@ -22,7 +22,7 @@ pub fn switch(routes: Route) -> Html {
     match routes {
         Route::HomePage => html! { <Home /> },
         Route::SukoduPage => html! { <Sukodu/> },
-        Route::NonogramPage => html! { <Nonogram/> },
+        Route::NonogramPage => html! { <NonnoGrampa/> },
         Route::NotFound => html! { <h1>{"404"}</h1> },
     }
 }
