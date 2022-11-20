@@ -87,10 +87,14 @@ impl NonogramCore {
         Self { grid, rotated, row_rules, col_rules }
     }
 
+    pub fn swap_cell(&mut self, row: usize, col: usize){
+        self.grid[row][col] = !self.grid[row][col];
+        self.rotated[col][row] = !self.rotated[col][row];
+    }
+
     pub fn change_cell(&self, row: usize, col: usize) -> Self {
         let mut clone = self.clone();
-        clone.grid[row][col] = !self.grid[row][col];
-        clone.rotated[col][row] = !self.rotated[col][row];
+        clone.swap_cell(row, col);
         clone
     }
 
@@ -111,7 +115,12 @@ impl NonogramCore {
     pub fn solve(&self) -> Self {
         // recursive solve the nonogram
         let mut clone = self.clone();
-        // TODO: implement
+        // all true
+        for row in clone.grid.iter_mut() {
+            for cell in row.iter_mut() {
+                *cell = true;
+            }
+        }
         clone
     }
 }
