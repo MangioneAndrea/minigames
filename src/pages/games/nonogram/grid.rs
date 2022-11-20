@@ -1,5 +1,6 @@
 use super::core::NonogramCore;
 use super::core::Rule;
+use js_sys::Math::random;
 use std::cmp;
 use yew::prelude::*;
 
@@ -13,6 +14,8 @@ pub struct GridProps {
 
 #[function_component(Grid)]
 pub fn grid(props: &GridProps) -> Html {
+    let is_inverted = use_state(|| false);
+
     let gridb = use_state(|| {
         NonogramCore::new(
             props.rows,
@@ -24,8 +27,14 @@ pub fn grid(props: &GridProps) -> Html {
 
     let oncellclick = |row: usize, col: usize| {
         let grid = gridb.clone();
+        let is_inverted = is_inverted.clone();
         Callback::from(move |_: MouseEvent| {
-            grid.set((*grid).change_cell(row, col));
+            if !*is_inverted {
+                grid.set((*grid).change_cell(row, col));
+            } else {
+                grid.set((*grid).change_cell(col, row));
+            }
+            is_inverted.set(random() < 0.5);
         })
     };
     let solve = {
@@ -55,6 +64,38 @@ pub fn grid(props: &GridProps) -> Html {
     let empty_cell = || html! {<div class="w-6 h-6 text-center"/>};
     let colored_num_cell = |num: usize, color: String| html! {<div class={format!("w-6 h-6 text-center {}", color)}>{num}</div>};
 
+    let grid_directed = {
+        if *is_inverted {
+            gridb.rotated.clone()
+        } else {
+            gridb.grid.clone()
+        }
+    };
+
+    let grid_directed_inverted = {
+        if *is_inverted {
+            gridb.grid.clone()
+        } else {
+            gridb.rotated.clone()
+        }
+    };
+
+    let top_rules = {
+        if *is_inverted {
+            &props.cols_rules
+        } else {
+            &props.rows_rules
+        }
+    };
+
+    let left_rules = {
+        if *is_inverted {
+            &props.rows_rules
+        } else {
+            &props.cols_rules
+        }
+    };
+
     html! {
         <>
         <button onclick={solve}>{"Solve"}</button>
@@ -71,15 +112,15 @@ pub fn grid(props: &GridProps) -> Html {
                             let col_elem= pos/total_width;
                             let col_index=column_index-max_rows;
 
-                            let empty_cells = max_cols - props.cols_rules[col_index].len();
+                            let empty_cells = max_cols - top_rules[col_index].len();
 
 
                             if col_elem < empty_cells{
                                 empty_cell()
                             }else{
-                                let is_valid=props.cols_rules[col_index].is_full_and_valid(gridb.rotated[col_index].clone());
+                                let is_valid=top_rules[col_index].is_full_and_valid(grid_directed_inverted[col_index].clone());
                                 let row_index = col_elem - empty_cells;
-                                let num = props.cols_rules[col_index][row_index];
+                                let num = top_rules[col_index][row_index];
                                 colored_num_cell(num, if is_valid {String::from("bg-lime-300")} else {String::from("")})
                             }
 
@@ -87,23 +128,23 @@ pub fn grid(props: &GridProps) -> Html {
                     }).collect::<Html>()
             }
             { (0 .. (props).rows).map(|row|{
-                let is_valid=props.rows_rules[row].is_full_and_valid(gridb[row].clone());
+                let is_valid=left_rules[row].is_full_and_valid(grid_directed[row].clone());
 
                 (0..(max_rows))
                     .map(|mr| {
-                        let empty_cells = max_rows - props.rows_rules[row].len();
+                        let empty_cells = max_rows - left_rules[row].len();
                         if mr < empty_cells{
                             empty_cell()
                         }else{
                             let row_index = mr - empty_cells;
-                            let num = props.rows_rules[row][row_index];
+                            let num = left_rules[row][row_index];
                             colored_num_cell(num, if is_valid {String::from("bg-lime-300")} else {String::from("")})
                         }
                     })
                     .chain(
                         (0 .. props.cols).map(|col|{
                             html! {
-                                <div class={format!("border margin w-6 h-6 bg-{}", if gridb[row][col] {"black"}else{"white"})} onclick={oncellclick(row, col)}/>
+                                <div class={format!("border margin w-6 h-6 bg-{}", if grid_directed[row][col] {"black"}else{"white"})} onclick={oncellclick(row, col)}/>
                             }
                 })).collect::<Html>()
             }).collect::<Html>() }
