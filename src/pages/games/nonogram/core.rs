@@ -62,10 +62,12 @@ macro_rules! rule {
 pub struct NonogramCore {
     pub grid: Vec<Vec<bool>>,
     pub rotated: Vec<Vec<bool>>,
+    row_rules: Vec<Rule>,
+    col_rules: Vec<Rule>,
 }
 
 impl NonogramCore {
-    pub fn new(rows: usize, cols: usize) -> Self {
+    pub fn new(rows: usize, cols: usize, row_rules: Vec<Rule>, col_rules: Vec<Rule>) -> Self {
         let mut grid = Vec::new();
         for _ in 0..rows {
             let mut row = Vec::new();
@@ -74,21 +76,42 @@ impl NonogramCore {
             }
             grid.push(row);
         }
-        let mut rotaded_grid = Vec::new();
+        let mut rotated = Vec::new();
         for _ in 0..cols {
             let mut row = Vec::new();
             for _ in 0..rows {
                 row.push(false);
             }
-            rotaded_grid.push(row);
+            rotated.push(row);
         }
-        Self { grid, rotated: rotaded_grid }
+        Self { grid, rotated, row_rules, col_rules }
     }
 
     pub fn change_cell(&self, row: usize, col: usize) -> Self {
         let mut clone = self.clone();
         clone.grid[row][col] = !self.grid[row][col];
         clone.rotated[col][row] = !self.rotated[col][row];
+        clone
+    }
+
+    pub fn is_valid(&self) -> bool {
+        for (i, row) in self.grid.iter().enumerate() {
+            if !self.row_rules[i].is_full_and_valid(row.clone()) {
+                return false;
+            }
+        }
+        for (i, row) in self.rotated.iter().enumerate() {
+            if !self.col_rules[i].is_full_and_valid(row.clone()) {
+                return false;
+            }
+        }
+        true
+    }
+
+    pub fn solve(&self) -> Self {
+        // recursive solve the nonogram
+        let mut clone = self.clone();
+        // TODO: implement
         clone
     }
 }

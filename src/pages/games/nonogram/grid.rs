@@ -13,14 +13,25 @@ pub struct GridProps {
 
 #[function_component(Grid)]
 pub fn grid(props: &GridProps) -> Html {
-    let gridb = use_state(|| NonogramCore::new(props.rows, props.cols));
+    let gridb = use_state(|| {
+        NonogramCore::new(
+            props.rows,
+            props.cols,
+            props.rows_rules.clone(),
+            props.cols_rules.clone(),
+        )
+    });
 
     let oncellclick = |grid: UseStateHandle<NonogramCore>, row: usize, col: usize| {
         Callback::from(move |_: MouseEvent| {
             grid.set((*grid).change_cell(row, col));
         })
     };
-
+    let solve = |grid: UseStateHandle<NonogramCore>| {
+        Callback::from(move |_: MouseEvent| {
+            grid.set((*grid).solve());
+        })
+    };
     let max_rows = {
         let mut max = 0;
         for row in &props.rows_rules {
@@ -41,9 +52,10 @@ pub fn grid(props: &GridProps) -> Html {
 
     let empty_cell = || html! {<div class="w-6 h-6 text-center"/>};
     let colored_num_cell = |num: usize, color: String| html! {<div class={format!("w-6 h-6 text-center {}", color)}>{num}</div>};
-    let num_cell = |num: usize| colored_num_cell(num, String::from(""));
 
     html! {
+        <>
+        <button onclick={solve(gridb.clone())}>{"Solve"}</button>
         <div class={format!("grid w-fit")} style={format!("grid-template-columns:repeat({}, minmax(0,1fr));", props.cols+max_rows)}>
             {
                 (0..total_width*max_cols)
@@ -94,5 +106,6 @@ pub fn grid(props: &GridProps) -> Html {
                 })).collect::<Html>()
             }).collect::<Html>() }
         </div>
+        </>
     }
 }
