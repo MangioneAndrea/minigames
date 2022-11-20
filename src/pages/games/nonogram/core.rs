@@ -1,4 +1,4 @@
-use std::ops::Index;
+use std::ops::{Index, IndexMut};
 
 #[derive(Clone, PartialEq)]
 pub struct Rule {
@@ -58,21 +58,14 @@ macro_rules! rule {
     };
 }
 
-struct NonogramCore {
-    pub rows: usize,
-    pub cols: usize,
-    pub rows_rules: Vec<Vec<usize>>,
-    pub cols_rules: Vec<Vec<usize>>,
+#[derive(Clone, PartialEq)]
+pub struct NonogramCore {
     pub grid: Vec<Vec<bool>>,
+    pub rotated: Vec<Vec<bool>>,
 }
 
 impl NonogramCore {
-    pub fn new(
-        rows: usize,
-        cols: usize,
-        rows_rules: Vec<Vec<usize>>,
-        cols_rules: Vec<Vec<usize>>,
-    ) -> Self {
+    pub fn new(rows: usize, cols: usize) -> Self {
         let mut grid = Vec::new();
         for _ in 0..rows {
             let mut row = Vec::new();
@@ -81,12 +74,35 @@ impl NonogramCore {
             }
             grid.push(row);
         }
-        Self {
-            rows,
-            cols,
-            rows_rules,
-            cols_rules,
-            grid,
+        let mut rotaded_grid = Vec::new();
+        for _ in 0..cols {
+            let mut row = Vec::new();
+            for _ in 0..rows {
+                row.push(false);
+            }
+            rotaded_grid.push(row);
         }
+        Self { grid, rotated: rotaded_grid }
+    }
+
+    pub fn change_cell(&self, row: usize, col: usize) -> Self {
+        let mut clone = self.clone();
+        clone.grid[row][col] = !self.grid[row][col];
+        clone.rotated[col][row] = !self.rotated[col][row];
+        clone
+    }
+}
+
+impl Index<usize> for NonogramCore {
+    type Output = Vec<bool>;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        &self.grid[index]
+    }
+}
+
+impl IndexMut<usize> for NonogramCore {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        &mut self.grid[index]
     }
 }

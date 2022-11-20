@@ -1,3 +1,4 @@
+use super::core::NonogramCore;
 use super::core::Rule;
 use std::cmp;
 use yew::prelude::*;
@@ -12,25 +13,11 @@ pub struct GridProps {
 
 #[function_component(Grid)]
 pub fn grid(props: &GridProps) -> Html {
-    let gridb = use_state(|| {
-        let mut grid = Vec::new();
-        for _ in 0..props.rows {
-            let mut row = Vec::new();
-            for _ in 0..props.cols {
-                row.push(false);
-            }
-            grid.push(row);
-        }
-        grid
-    });
+    let gridb = use_state(|| NonogramCore::new(props.rows, props.cols));
 
-    let oncellclick = |grid: UseStateHandle<Vec<Vec<bool>>>, row: usize, col: usize| {
+    let oncellclick = |grid: UseStateHandle<NonogramCore>, row: usize, col: usize| {
         Callback::from(move |_: MouseEvent| {
-            grid.set({
-                let mut grid = (*grid).clone();
-                grid[row][col] = !grid[row][col];
-                grid.to_vec()
-            });
+            grid.set((*grid).change_cell(row, col));
         })
     };
 
@@ -72,19 +59,20 @@ pub fn grid(props: &GridProps) -> Html {
 
                             let empty_cells = max_cols - props.cols_rules[col_index].len();
 
+
                             if col_elem < empty_cells{
                                 empty_cell()
                             }else{
+                                let is_valid=props.cols_rules[col_index].is_full_and_valid(gridb.rotated[col_index].clone());
                                 let row_index = col_elem - empty_cells;
                                 let num = props.cols_rules[col_index][row_index];
-                                num_cell(num)
+                                colored_num_cell(num, if is_valid {String::from("bg-lime-300")} else {String::from("")})
                             }
 
                         }
                     }).collect::<Html>()
             }
             { (0 .. (props).rows).map(|row|{
-
                 let is_valid=props.rows_rules[row].is_full_and_valid(gridb[row].clone());
 
                 (0..(max_rows))
