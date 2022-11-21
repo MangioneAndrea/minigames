@@ -1,14 +1,32 @@
-use std::array;
+pub struct Cell {
+    pub value: u8,
+    pub is_given: bool,
+}
 
-use yew::prelude::*;
+impl Cell {
+    pub fn new(value: u8) -> Self {
+        Self {
+            value,
+            is_given: value != 0,
+        }
+    }
+
+    pub fn format(&self) -> String{
+        if self.is_given {
+            "bg-gray-100".to_string()
+        } else {
+            "bg-white".to_string()
+        }
+    }
+}
 
 pub struct Square {
-    pub rows: Vec<Vec<usize>>,
+    pub rows: Vec<Vec<Cell>>,
 }
 
 impl Square {
-    pub fn new(rows: Vec<Vec<usize>>) -> Self {
-        Self { rows }
+    pub fn new(rows: Vec<Vec<u8>>) -> Self {
+        Self { rows: rows.into_iter().map(|row| row.into_iter().map(Cell::new).collect()).collect() }
     }
 }
 
