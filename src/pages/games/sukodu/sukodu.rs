@@ -1,7 +1,8 @@
+use std::fmt::format;
+
 use yew::prelude::*;
 
-use super::core::{Grid, Square};
-use crate::pages::games::sukodu::cell::Cell;
+use super::core::{Cell, Grid, Square};
 
 #[function_component(Sukodu9x9)]
 fn sukodu9x9() -> Html {
@@ -25,25 +26,38 @@ fn sukodu9x9() -> Html {
         ])
     });
 
+    let onclick = |r: usize, s: usize, sr: usize, c: usize| {
+        let grid = grid.clone();
+        Callback::from(move |_| {
+            let gr = &mut (*grid).clone();
+            gr.squares[r][s].increase_at(sr, c);
+            grid.set(gr.to_owned());
+        })
+    };
+
     html! {
         <div class={"border-4 w-fit border-gray-600"}>
         {
-            grid.squares.iter().map(|row| {
+            grid.squares.iter().enumerate().map(|(r_index, row)| {
                 html!{
                     <div class={"grid grid-cols-3 w-fit"}>
                         {
-                            row.iter().map(|square| {
+                            row.iter().enumerate().map(|(s_index, square)| {
                                 html!{
                                     <div class={"border-2 border-gray-400"}>
                                         {
-                                            square.rows.iter().map(|row| {
+                                            square.rows.iter().enumerate().map(|(sr_index, row)| {
                                                 html!{
                                                     <div class={"grid grid-cols-3 w-fit"}>
                                                         {
-                                                            row.iter().map(|cell| {
+                                                            row.iter().enumerate().map(|(c_index, cell)| {
                                                                 html!{
-                                                                    <div class={format!("border w-6 h-6 text-center {}", cell.format())}>
-                                                                    {cell.value}
+                                                                    <div onclick={onclick(r_index, s_index, sr_index, c_index)} class={format!("border w-6 h-6 text-center {}", cell.format())}>
+                                                                    {if cell.value > 0 {
+                                                                        format!("{}", cell.value)
+                                                                    } else {
+                                                                        format!("")
+                                                                    }}
                                                                     </div>
                                                                 }
                                                             }).collect::<Html>()
