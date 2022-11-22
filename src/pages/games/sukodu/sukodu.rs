@@ -11,7 +11,7 @@ fn sukodu9x9() -> Html {
             vec![
                 Square::new(vec![vec![0, 0, 0], vec![6, 8, 0], vec![1, 9, 0]]),
                 Square::new(vec![vec![2, 6, 0], vec![0, 7, 0], vec![0, 0, 4]]),
-                Square::new(vec![vec![1, 9, 0], vec![0, 0, 4], vec![5, 0, 0]]),
+                Square::new(vec![vec![7, 0, 1], vec![0, 9, 0], vec![5, 0, 0]]),
             ],
             vec![
                 Square::new(vec![vec![8, 2, 0], vec![0, 0, 4], vec![0, 5, 0]]),
@@ -31,7 +31,7 @@ fn sukodu9x9() -> Html {
         Callback::from(move |_| {
             let gr = &mut (*grid).clone();
             gr.squares[square_row][square_column].increase_at(cell_row, cell_column);
-            //gr.squares[square_row][square_column].check_and_mark();
+            gr.squares[square_row][square_column].check_and_mark();
             gr.check_and_mark(square_row * 3 + cell_row, square_column * 3 + cell_column);
             grid.set(gr.to_owned());
         })

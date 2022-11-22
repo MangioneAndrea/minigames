@@ -107,24 +107,23 @@ impl Grid {
             self.squares[row / 3][index / 3].rows[row % 3][index % 3].is_wrong_line = false;
         }
 
-        for index in 0..9 {
+        for i in 0..9 {
             // mark as false if the value is double in the row
-            if self.squares[index / 3][column / 3].rows[index % 3][column % 3].value
+            if self.squares[i / 3][column / 3].rows[i % 3][column % 3].value
                 == self.squares[row / 3][column / 3].rows[row % 3][column % 3].value
                 && self.squares[row / 3][column / 3].rows[row % 3][column % 3].value != 0
-                && index != row
+                && i != row
             {
-                self.squares[index / 3][column / 3].rows[index % 3][column % 3].is_wrong_line =
-                    true;
+                self.squares[i / 3][column / 3].rows[i % 3][column % 3].is_wrong_line = true;
                 self.squares[row / 3][column / 3].rows[row % 3][column % 3].is_wrong_line = true;
             }
             // mark as false if the value is double in the column
-            if self.squares[row / 3][index / 3].rows[row % 3][index % 3].value
+            if self.squares[row / 3][i / 3].rows[row % 3][i % 3].value
                 == self.squares[row / 3][column / 3].rows[row % 3][column % 3].value
                 && self.squares[row / 3][column / 3].rows[row % 3][column % 3].value != 0
-                && index != column
+                && i != column
             {
-                self.squares[row / 3][index / 3].rows[row % 3][index % 3].is_wrong_line = true;
+                self.squares[row / 3][i / 3].rows[row % 3][i % 3].is_wrong_line = true;
                 self.squares[row / 3][column / 3].rows[row % 3][column % 3].is_wrong_line = true;
             }
         }
