@@ -2,6 +2,8 @@
 pub struct Cell {
     pub value: u8,
     pub is_given: bool,
+    pub is_wrong_square: bool,
+    pub is_wrong_line: bool,
 }
 
 impl Cell {
@@ -9,18 +11,33 @@ impl Cell {
         Self {
             value,
             is_given: value != 0,
+            is_wrong_square: false,
+            is_wrong_line: false,
         }
     }
 
     pub fn format(&self) -> String {
+        let mut format = String::new();
+
         if self.is_given {
-            "bg-gray-100".to_string()
+            format.push_str("bg-gray-100 ");
+            if self.is_wrong_square || self.is_wrong_line {
+                format.push_str("bg-red-200 ");
+            }
         } else {
-            "bg-white".to_string()
+            format.push_str("bg-white ");
+            if self.is_wrong_line || self.is_wrong_square {
+                format.push_str("bg-red-100 ");
+            }
         }
+
+        format
     }
 
     pub fn increment(&mut self) {
+        if self.is_given {
+            return;
+        }
         if self.value < 9 {
             self.value += 1;
         } else {
@@ -47,6 +64,31 @@ impl Square {
     pub fn increase_at(&mut self, r: usize, c: usize) {
         self.rows[r][c].increment();
     }
+
+    pub fn check_and_mark(&mut self) {
+        for row in self.rows.iter_mut() {
+            for cell in row.iter_mut() {
+                cell.is_wrong_square = false;
+            }
+        }
+
+        for r in 0..3 {
+            for c in 0..3 {
+                for r2 in 0..3 {
+                    for c2 in 0..3 {
+                        if r2 != r || c2 != c {
+                            if self.rows[r2][c2].value == self.rows[r][c].value
+                                && self.rows[r][c].value != 0
+                            {
+                                self.rows[r][c].is_wrong_square = true;
+                                self.rows[r2][c2].is_wrong_square = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 #[derive(Clone)]
@@ -59,7 +101,32 @@ impl Grid {
         Self { squares }
     }
 
-    pub fn as_mutable(&mut self) -> &mut Self {
-        self
+    pub fn check_and_mark(&mut self, row: usize, column: usize) {
+        for index in 0..9 {
+            self.squares[index / 3][column / 3].rows[index % 3][column % 3].is_wrong_line = false;
+            self.squares[row / 3][index / 3].rows[row % 3][index % 3].is_wrong_line = false;
+        }
+
+        for index in 0..9 {
+            // mark as false if the value is double in the row
+            if self.squares[index / 3][column / 3].rows[index % 3][column % 3].value
+                == self.squares[row / 3][column / 3].rows[row % 3][column % 3].value
+                && self.squares[row / 3][column / 3].rows[row % 3][column % 3].value != 0
+                && index != row
+            {
+                self.squares[index / 3][column / 3].rows[index % 3][column % 3].is_wrong_line =
+                    true;
+                self.squares[row / 3][column / 3].rows[row % 3][column % 3].is_wrong_line = true;
+            }
+            // mark as false if the value is double in the column
+            if self.squares[row / 3][index / 3].rows[row % 3][index % 3].value
+                == self.squares[row / 3][column / 3].rows[row % 3][column % 3].value
+                && self.squares[row / 3][column / 3].rows[row % 3][column % 3].value != 0
+                && index != column
+            {
+                self.squares[row / 3][index / 3].rows[row % 3][index % 3].is_wrong_line = true;
+                self.squares[row / 3][column / 3].rows[row % 3][column % 3].is_wrong_line = true;
+            }
+        }
     }
 }
