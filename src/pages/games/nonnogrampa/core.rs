@@ -9,7 +9,7 @@ impl Rule {
     pub fn len(&self) -> usize {
         self.set.len()
     }
-    pub fn is_full_and_valid(&self, row: Vec<bool>) -> bool {
+    pub fn is_full_and_valid(&self, row: &Vec<bool>) -> bool {
         // Do not check previous blocks
         let mut index = 0;
 
@@ -100,12 +100,12 @@ impl NonogramCore {
 
     pub fn is_valid(&self) -> bool {
         for (i, row) in self.grid.iter().enumerate() {
-            if !self.row_rules[i].is_full_and_valid(row.clone()) {
+            if !self.row_rules[i].is_full_and_valid(row) {
                 return false;
             }
         }
         for (i, row) in self.rotated.iter().enumerate() {
-            if !self.col_rules[i].is_full_and_valid(row.clone()) {
+            if !self.col_rules[i].is_full_and_valid(row) {
                 return false;
             }
         }

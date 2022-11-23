@@ -2,6 +2,7 @@ use super::core::NonogramCore;
 use super::core::Rule;
 use js_sys::Math::random;
 use std::cmp;
+use yew::html::IntoPropValue;
 use yew::prelude::*;
 
 #[derive(Properties, Clone, PartialEq)]
@@ -25,24 +26,19 @@ pub fn grid(props: &GridProps) -> Html {
         )
     });
 
-    let oncellclick = |row: usize, col: usize| {
+    let onclick = {
         let grid = gridb.clone();
         let is_inverted = is_inverted.clone();
-        Callback::from(move |_: MouseEvent| {
-            if !*is_inverted {
-                grid.set((*grid).change_cell(row, col));
+        Callback::from(move |(col, row): (usize, usize)| {
+            if *is_inverted {
+                grid.set((*grid).change_cell(row, col).clone());
             } else {
-                grid.set((*grid).change_cell(col, row));
+                grid.set((*grid).change_cell(col, row).clone());
             }
             is_inverted.set(random() < 0.5);
         })
     };
-    let solve = {
-        let grid = gridb.clone();
-        Callback::from(move |_: MouseEvent| {
-            grid.set((*grid).solve());
-        })
-    };
+
     let max_rows = {
         let mut max = 0;
         for row in &props.rows_rules {
@@ -117,7 +113,7 @@ pub fn grid(props: &GridProps) -> Html {
                             if col_elem < empty_cells{
                                 empty_cell()
                             }else{
-                                let is_valid=top_rules[col_index].is_full_and_valid(grid_directed_inverted[col_index].clone());
+                                let is_valid=top_rules[col_index].is_full_and_valid(&grid_directed_inverted[col_index]);
                                 let row_index = col_elem - empty_cells;
                                 let num = top_rules[col_index][row_index];
                                 colored_num_cell(num, if is_valid {String::from("bg-lime-300")} else {String::from("")})
@@ -127,7 +123,7 @@ pub fn grid(props: &GridProps) -> Html {
                     }).collect::<Html>()
             }
             { (0 .. (props).rows).map(|row|{
-                let is_valid=left_rules[row].is_full_and_valid(grid_directed[row].clone());
+                let is_valid=left_rules[row].is_full_and_valid(&grid_directed[row]);
 
                 (0..(max_rows))
                     .map(|mr| {
@@ -143,12 +139,11 @@ pub fn grid(props: &GridProps) -> Html {
                     .chain(
                         (0 .. props.cols).map(|col|{
                             html! {
-                                <div class={format!("border margin w-6 h-6 bg-{}", if grid_directed[row][col] {"black"}else{"white"})} onclick={oncellclick(row, col)}/>
+                                <div class={format!("border margin w-6 h-6 bg-{}", if grid_directed[row][col] {"black"}else{"white"})} onclick={{let m=onclick.clone(); move |_| m.emit((row, col))}}/>
                             }
                 })).collect::<Html>()
             }).collect::<Html>() }
         </div>
-        <button onclick={solve}>{"Solve"}</button>
         </>
     }
 }
