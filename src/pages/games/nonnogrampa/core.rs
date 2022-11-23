@@ -14,14 +14,14 @@ impl Rule {
         let mut index = 0;
 
         // All the rules are satisfied
-        for r in self.set.clone() {
+        for r in &self.set {
             let mut count = 0;
             for i in index..row.len() {
                 index = i;
                 if row[i] {
                     count += 1;
                 } else {
-                    if count == r {
+                    if count == *r {
                         break;
                     }
                     if count > 0 {
@@ -29,7 +29,7 @@ impl Rule {
                     }
                 }
             }
-            if count != r {
+            if count != *r {
                 return false;
             }
         }

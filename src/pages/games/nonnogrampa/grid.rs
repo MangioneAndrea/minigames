@@ -2,7 +2,6 @@ use super::core::NonogramCore;
 use super::core::Rule;
 use js_sys::Math::random;
 use std::cmp;
-use yew::html::IntoPropValue;
 use yew::prelude::*;
 
 #[derive(Properties, Clone, PartialEq)]
