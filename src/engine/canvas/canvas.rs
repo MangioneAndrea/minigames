@@ -1,27 +1,37 @@
 use js_sys::Object;
-use web_sys::HtmlCanvasElement;
 use wasm_bindgen::JsCast;
+use web_sys::HtmlCanvasElement;
+use yew::{NodeRef, use_node_ref};
+
+#[derive(Clone, PartialEq)]
 pub struct Canvas {
-    drawings: Object,
+    entities: Vec<Object>,
+    pub canvas: Option<HtmlCanvasElement>,
+    pub node_ref: NodeRef,
 }
 
 impl Canvas {
-    pub fn new() -> Canvas {
+    pub fn new(node_ref: NodeRef) -> Canvas {
         Canvas {
-            drawings: Object::new(),
+            entities: vec![],
+            canvas: None,
+            node_ref: node_ref,
         }
     }
 
-    pub fn draw(&self, drawable: &HtmlCanvasElement) {
-        let context= drawable
+    pub fn draw(&self) {
+        let context = self
+            .node_ref
+            .cast::<HtmlCanvasElement>()
+            .unwrap()
             .get_context("2d")
             .unwrap()
             .unwrap()
             .dyn_into::<web_sys::CanvasRenderingContext2d>()
             .unwrap();
-        
+
         context.fill_rect(0., 0., 100., 100.);
-        
+
         log::info!("Drawing");
 
         context.stroke();
