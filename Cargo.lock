@@ -387,7 +387,9 @@ version = "0.1.0"
 dependencies = [
  "js-sys",
  "log",
+ "wasm-bindgen",
  "wasm-logger",
+ "web-sys",
  "yew",
  "yew-router",
 ]

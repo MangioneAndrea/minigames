@@ -11,3 +11,11 @@ yew-router = { git = "https://github.com/yewstack/yew.git" }
 log = "0.4.6"
 wasm-logger = "0.2.0"
 js-sys = "0.3.60"
+wasm-bindgen = "0.2.83"
+
+[dependencies.web-sys]
+web-sys = "0.3.60"
+features = [
+    'HtmlCanvasElement',
+    'CanvasRenderingContext2d',
+]
