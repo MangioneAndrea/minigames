@@ -1,5 +1,4 @@
 use super::canvas::Canvas;
-use web_sys::HtmlCanvasElement;
 use yew::prelude::*;
 
 #[hook]
