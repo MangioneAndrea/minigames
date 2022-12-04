@@ -1,17 +1,18 @@
+use crate::engine::canvas::actor::Actor;
 use yew::prelude::*;
 
 use crate::engine::{canvas::hooks::use_canvas, keyboard::keyboard::use_on_key_pressed};
 
 #[function_component(Snakent)]
 pub fn snakent() -> Html {
-    let (node, cav) = use_canvas(|| (800, 800));
+    let (node, mut cav) = use_canvas(|| (800, 800, vec![Actor::new()]));
 
-    use_effect(move || {
-        cav.draw();
-    });
-
-    use_on_key_pressed("a".to_string(), move || {
-        log::info!("a");
+    use_on_key_pressed("l".to_string(), {
+        move || {
+            let actor = &mut cav.actors[0];
+            actor.push_by(10., 0.);
+            (&cav).draw();
+        }
     });
 
     html! {

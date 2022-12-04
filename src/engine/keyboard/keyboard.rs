@@ -6,22 +6,21 @@ use web_sys::KeyboardEvent;
 use yew::prelude::*;
 
 #[hook]
-pub fn use_on_key_pressed<F>(key: String, callback: F)
+pub fn use_on_key_pressed<F>(key: String, mut callback: F)
 where
-    F: Fn() + 'static,	
+    F: FnMut() + 'static,
 {
-    let callback = use_callback(move |_, _| callback(), ());
 
     use_effect_with_deps(
-        move |callback| {
+        move |_| {
             // Attach a keydown event listener to the document.
             let document = window().unwrap().document().unwrap();
 
-            let callback = callback.clone();
+            //let callback = callback.clone();
 
             let cb = Closure::<dyn FnMut(_)>::new(move |event: KeyboardEvent| {
                 if event.key() == key {
-                    callback.emit(0);
+                    callback();
                 }
             });
 
@@ -38,6 +37,6 @@ where
                     .unwrap_throw()
             }
         },
-        callback,
+        (),
     );
 }
