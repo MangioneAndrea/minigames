@@ -6,7 +6,7 @@ use yew::NodeRef;
 #[derive(Clone, PartialEq)]
 pub struct Canvas {
     pub actors: Vec<Actor>,
-    width: usize,
+    pub width: usize,
     height: usize,
     pub canvas: Option<HtmlCanvasElement>,
     pub node_ref: NodeRef,
@@ -55,8 +55,6 @@ impl Canvas {
         for ele in &self.actors {
             context.fill_rect(ele.x, ele.y, 100., 100.);
         }
-
-        log::info!("Drawing");
 
         context.stroke();
     }

@@ -15,13 +15,13 @@ impl Actor {
             components: vec![],
         }
     }
+
     pub fn move_to(&mut self, x: f64, y: f64) {
         self.x = x;
         self.y = y;
     }
 
     pub fn push_by(&mut self, x: f64, y: f64) {
-        self.x += x;
-        self.y += y;
+        self.move_to(self.x + x, self.y + y)
     }
 }

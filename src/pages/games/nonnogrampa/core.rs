@@ -84,10 +84,15 @@ impl NonogramCore {
             }
             rotated.push(row);
         }
-        Self { grid, rotated, row_rules, col_rules }
+        Self {
+            grid,
+            rotated,
+            row_rules,
+            col_rules,
+        }
     }
 
-    pub fn swap_cell(&mut self, row: usize, col: usize){
+    pub fn swap_cell(&mut self, row: usize, col: usize) {
         self.grid[row][col] = !self.grid[row][col];
         self.rotated[col][row] = !self.rotated[col][row];
     }
@@ -97,7 +102,7 @@ impl NonogramCore {
         clone.swap_cell(row, col);
         clone
     }
-
+    /*
     pub fn is_valid(&self) -> bool {
         for (i, row) in self.grid.iter().enumerate() {
             if !self.row_rules[i].is_full_and_valid(row) {
@@ -123,6 +128,7 @@ impl NonogramCore {
         }
         clone
     }
+    */
 }
 
 impl Index<usize> for NonogramCore {

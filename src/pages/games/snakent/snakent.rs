@@ -5,16 +5,23 @@ use crate::engine::{canvas::hooks::use_canvas, keyboard::keyboard::use_on_key_pr
 
 #[function_component(Snakent)]
 pub fn snakent() -> Html {
-    let (node, mut cav) = use_canvas(|| (800, 800, vec![Actor::new()]));
+    let (node, cav) = use_canvas(|| (800, 800, vec![Actor::new()]));
 
     use_on_key_pressed("l".to_string(), {
+        let cav = cav.clone();
         move || {
-            let actor = &mut cav.actors[0];
-            actor.push_by(10., 0.);
-            (&cav).draw();
+            cav.borrow_mut().actors[0].push_by(10., 0.);
+            cav.borrow_mut().draw();
         }
     });
 
+    use_on_key_pressed("h".to_string(), {
+        let cav = cav.clone();
+        move || {
+            cav.borrow_mut().actors[0].push_by(-10., 0.);
+            cav.borrow_mut().draw();
+        }
+    });
     html! {
         <div>
             <h1>{"Snaken't"}</h1>
