@@ -1,4 +1,4 @@
-use crate::engine::canvas::actor::Actor;
+use crate::engine::{canvas::actor::Actor, ticker::ticker::use_interval};
 use yew::prelude::*;
 
 use crate::engine::{canvas::hooks::use_canvas, keyboard::keyboard::use_on_key_pressed};
@@ -6,6 +6,14 @@ use crate::engine::{canvas::hooks::use_canvas, keyboard::keyboard::use_on_key_pr
 #[function_component(Snakent)]
 pub fn snakent() -> Html {
     let (node, cav) = use_canvas(|| (800, 800, vec![Actor::new()]));
+
+    use_interval(1000, {
+        let cav = cav.clone();
+        move || {
+            cav.borrow_mut().actors[0].push_by(0., 10.);
+            cav.borrow_mut().draw();
+        }
+    });
 
     use_on_key_pressed("l".to_string(), {
         let cav = cav.clone();
@@ -19,6 +27,22 @@ pub fn snakent() -> Html {
         let cav = cav.clone();
         move || {
             cav.borrow_mut().actors[0].push_by(-10., 0.);
+            cav.borrow_mut().draw();
+        }
+    });
+
+    use_on_key_pressed("j".to_string(), {
+        let cav = cav.clone();
+        move || {
+            cav.borrow_mut().actors[0].push_by(0., 10.);
+            cav.borrow_mut().draw();
+        }
+    });
+
+    use_on_key_pressed("k".to_string(), {
+        let cav = cav.clone();
+        move || {
+            cav.borrow_mut().actors[0].push_by(0., -10.);
             cav.borrow_mut().draw();
         }
     });
