@@ -1,5 +1,7 @@
 use web_sys::CanvasRenderingContext2d;
 
+use crate::engine::entities::component::Component;
+
 use super::super::actor::Actor;
 
 #[derive(Clone, PartialEq)]
@@ -8,6 +10,7 @@ pub struct Square {
     pub y: f64,
     pub width: f64,
     pub height: f64,
+    pub components: Vec<Box<dyn Component>>,
 }
 
 impl Square {
@@ -17,6 +20,7 @@ impl Square {
             y: 0.,
             width,
             height,
+            components: vec![],
         }
     }
 }
@@ -37,5 +41,13 @@ impl Actor for Square {
 
     fn clone_dyn(&self) -> Box<dyn Actor> {
         Box::new(self.clone())
+    }
+
+    fn on_construction(&mut self) {}
+
+    fn on_tick(&mut self) {
+        for component in &mut self.components {
+            component.act()(self);
+        }
     }
 }

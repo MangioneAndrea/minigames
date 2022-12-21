@@ -1,6 +1,8 @@
 use web_sys::CanvasRenderingContext2d;
 
 pub trait Actor {
+    fn on_construction(&mut self);
+    fn on_tick(&mut self);
     fn move_to(&mut self, x: f64, y: f64);
     fn push_by(&mut self, x: f64, y: f64);
     fn draw(&self, context: &CanvasRenderingContext2d);

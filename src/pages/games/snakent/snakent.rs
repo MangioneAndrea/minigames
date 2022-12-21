@@ -1,4 +1,7 @@
-use crate::engine::{ticker::ticker::use_interval, entities::{actor::Actor, actors::square::Square}};
+use crate::engine::{
+    entities::{actor::Actor, actors::square::Square, components::mover::Mover},
+    ticker::ticker::use_interval,
+};
 use yew::prelude::*;
 
 use crate::engine::{canvas::hooks::use_canvas, keyboard::keyboard::use_on_key_pressed};
@@ -7,7 +10,9 @@ const STEP: f64 = 40.;
 
 fn get_actors() -> Vec<Box<dyn Actor>> {
     let mut actors: Vec<Box<dyn Actor>> = vec![];
-    actors.push(Box::new(Square::new(STEP, STEP)));
+    let mut player = Square::new(STEP, STEP);
+    player.components.push(Box::new(Mover::new(10., 0.)));
+    actors.push(Box::new(player));
     actors
 }
 
@@ -18,7 +23,9 @@ pub fn snakent() -> Html {
     use_interval(1000, {
         let cav = cav.clone();
         move || {
-            cav.borrow_mut().actors[0].push_by(0., 10.);
+            for ele in &mut cav.borrow_mut().actors {
+                ele.on_tick();
+            }
             cav.borrow_mut().draw();
         }
     });
