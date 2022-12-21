@@ -1,11 +1,14 @@
-use super::actor::Actor;
+use std::rc::Rc;
+
+use crate::engine::entities::actor::Actor;
+
 use wasm_bindgen::JsCast;
 use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
 use yew::NodeRef;
 
 #[derive(Clone, PartialEq)]
 pub struct Canvas {
-    pub actors: Vec<Actor>,
+    pub actors: Vec<Box<dyn Actor>>,
     pub width: usize,
     height: usize,
     pub canvas: Option<HtmlCanvasElement>,
@@ -31,7 +34,7 @@ impl Canvas {
         }
     }
 
-    pub fn register_actor(&mut self, actor: Actor) {
+    pub fn register_actor(&mut self, actor: Box<dyn Actor>) {
         self.actors.push(actor);
     }
 
@@ -48,12 +51,12 @@ impl Canvas {
     }
 
     pub fn draw(&self) {
-        let context = self.assert_context();
+        let context = &self.assert_context();
 
         self.clear();
 
         for ele in &self.actors {
-            context.fill_rect(ele.x, ele.y, 100., 100.);
+            ele.draw(context);
         }
 
         context.stroke();

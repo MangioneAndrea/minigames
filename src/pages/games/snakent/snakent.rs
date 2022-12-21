@@ -1,11 +1,19 @@
-use crate::engine::{canvas::actor::Actor, ticker::ticker::use_interval};
+use crate::engine::{ticker::ticker::use_interval, entities::{actor::Actor, actors::square::Square}};
 use yew::prelude::*;
 
 use crate::engine::{canvas::hooks::use_canvas, keyboard::keyboard::use_on_key_pressed};
 
+const STEP: f64 = 40.;
+
+fn get_actors() -> Vec<Box<dyn Actor>> {
+    let mut actors: Vec<Box<dyn Actor>> = vec![];
+    actors.push(Box::new(Square::new(STEP, STEP)));
+    actors
+}
+
 #[function_component(Snakent)]
 pub fn snakent() -> Html {
-    let (node, cav) = use_canvas(|| (800, 800, vec![Actor::new()]));
+    let (node, cav) = use_canvas(|| (800, 800, get_actors()));
 
     use_interval(1000, {
         let cav = cav.clone();

@@ -1,14 +1,16 @@
 use std::{cell::RefCell, rc::Rc};
 
-use super::{actor::Actor, canvas::Canvas};
+use crate::engine::entities::actor::Actor;
+
+use super::canvas::Canvas;
 use yew::prelude::*;
 
 #[hook]
 pub fn use_canvas<F>(init_fn: F) -> (Html, Rc<RefCell<Canvas>>)
 where
-    F: FnOnce() -> (usize, usize, Vec<Actor>),
+    F: FnOnce() -> (usize, usize, Vec<Box<dyn Actor>>),
 {
-    let state = use_state(init_fn);
+    let state: UseStateHandle<(usize, usize, Vec<Box<dyn Actor>>)> = use_state(init_fn);
     let (width, height, initial_actors) = &*state;
     let mut cv = Rc::new(RefCell::new(Canvas::new(use_node_ref(), *height, *width)));
 
